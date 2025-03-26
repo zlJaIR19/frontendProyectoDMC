@@ -15,8 +15,14 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   
   const currentUser = authService.getCurrentUser();
   
-  if (currentUser && requiredRoles.includes(currentUser.rol)) {
-    return true;
+  // Check if user has any of the required roles (case-insensitive)
+  if (currentUser) {
+    const userRole = currentUser.rol.toLowerCase();
+    const hasRequiredRole = requiredRoles.some(role => role.toLowerCase() === userRole);
+    
+    if (hasRequiredRole) {
+      return true;
+    }
   }
   
   router.navigate(['/productos']);

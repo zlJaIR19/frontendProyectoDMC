@@ -66,14 +66,14 @@ export class AuthService {
         console.log(`Checking roles: User role=${userRole}, Requested role=${requestedRole}`);
         
         // For admin login
-        if (requestedRole === 'admin') {
-          if (userRole !== 'admin') {
+        if (requestedRole === 'admin' || requestedRole === 'administrador') {
+          if (userRole !== 'admin' && userRole !== 'administrador') {
             console.error('User is not an admin');
             throw new Error('No tienes permisos de administrador');
           }
         } 
         // For client login
-        else if (requestedRole === 'cliente') {
+        else if (requestedRole === 'cliente' || requestedRole === 'client') {
           if (userRole !== 'cliente') {
             console.error('User is not a client');
             throw new Error('No tienes permisos de cliente');
@@ -107,12 +107,13 @@ export class AuthService {
 
   isAdmin(): boolean {
     const user = this.currentUserSubject.value;
-    return !!user && user.rol === 'admin';
+    const userRole = user?.rol.toLowerCase();
+    return !!user && (userRole === 'administrador' || userRole === 'admin');
   }
 
   isClient(): boolean {
     const user = this.currentUserSubject.value;
-    return !!user && user.rol === 'cliente';
+    return !!user && user.rol.toLowerCase() === 'cliente';
   }
 
   getCurrentUser(): Usuario | null {

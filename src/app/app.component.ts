@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavComponent } from './shared/components/nav/nav.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [RouterOutlet, NavComponent],
+  template: `
+    <app-nav></app-nav>
+    <main class="container mx-auto p-4">
+      <router-outlet></router-outlet>
+    </main>
+  `
 })
 export class AppComponent {
-  title = 'Frontend';
+  title = 'E-Commerce App';
 }

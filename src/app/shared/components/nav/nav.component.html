@@ -1,0 +1,26 @@
+<nav class="bg-amber-900 shadow-lg">
+  <div class="container mx-auto px-4 py-3">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <div class="text-xl font-bold text-amber-100">Cafetea Perú</div>
+      </div>
+      
+      <div class="flex space-x-4">
+        @if (currentUser) {
+          <a routerLink="/productos" class="text-amber-100 hover:text-amber-300 transition-colors px-3 py-2 rounded-md text-sm font-medium">Productos</a>
+          
+          @if (isAdmin) {
+            <a routerLink="/admin/ordenes" class="text-amber-100 hover:text-amber-300 transition-colors px-3 py-2 rounded-md text-sm font-medium">Órdenes</a>
+          }
+          
+          <button (click)="logout()" class="text-amber-100 hover:text-amber-300 transition-colors px-3 py-2 rounded-md text-sm font-medium">Cerrar Sesión</button>
+        } @else {
+          <a routerLink="/login" class="text-amber-100 hover:text-amber-300 transition-colors px-3 py-2 rounded-md text-sm font-medium">Iniciar Sesión</a>
+        }
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,141 @@
+<div class="bg-amber-50 min-h-screen pb-12">
+  <!-- Admin header section -->
+  <div class="bg-coffee-pattern bg-amber-900 text-white py-8 mb-8">
+    <div class="container mx-auto px-4">
+      <h1 class="text-3xl font-serif font-bold mb-2 text-amber-100">Panel de Administración</h1>
+      <p class="text-amber-200">Gestión de órdenes de Cafetea Perú</p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4">
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h2 class="text-2xl font-serif font-bold text-amber-900 mb-4 md:mb-0">Órdenes de Clientes</h2>
+        
+        <!-- Search input -->
+        <div class="relative w-full md:w-64">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            placeholder="Buscar órdenes..." 
+            class="w-full pl-10 pr-4 py-2 border border-amber-300 rounded-full focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white"
+            (input)="searchOrders($event)"
+          >
+        </div>
+      </div>
+      
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
+        <span class="block sm:inline">{{ errorMessage }}</span>
+      </div>
+      
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="flex justify-center items-center py-16">
+        <svg class="animate-spin h-10 w-10 text-amber-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+      
+      <!-- No orders -->
+      <div *ngIf="!isLoading && filteredOrdenes.length === 0" class="text-center py-16 bg-amber-50 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-amber-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+        </svg>
+        <p class="text-amber-800 text-xl font-medium">No se encontraron órdenes</p>
+        <p class="text-amber-600 mt-2">Las órdenes de los clientes aparecerán aquí</p>
+      </div>
+      
+      <!-- Orders table -->
+      <div *ngIf="!isLoading && filteredOrdenes.length > 0" class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+          <thead class="bg-amber-100 text-amber-900">
+            <tr>
+              <th class="py-3 px-4 text-left">
+                <button (click)="changeSortField('id')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
+                  ID
+                  <span *ngIf="sortField === 'id'" class="ml-1">
+                    <svg *ngIf="sortDirection === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                    </svg>
+                    <svg *ngIf="sortDirection === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th class="py-3 px-4 text-left">
+                <button (click)="changeSortField('fecha')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
+                  Fecha
+                  <span *ngIf="sortField === 'fecha'" class="ml-1">
+                    <svg *ngIf="sortDirection === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                    </svg>
+                    <svg *ngIf="sortDirection === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th class="py-3 px-4 text-left">
+                <button (click)="changeSortField('id_usuario')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
+                  Cliente
+                  <span *ngIf="sortField === 'id_usuario'" class="ml-1">
+                    <svg *ngIf="sortDirection === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                    </svg>
+                    <svg *ngIf="sortDirection === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th class="py-3 px-4 text-left">
+                <button (click)="changeSortField('total')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
+                  Total
+                  <span *ngIf="sortField === 'total'" class="ml-1">
+                    <svg *ngIf="sortDirection === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                    </svg>
+                    <svg *ngIf="sortDirection === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th class="py-3 px-4 text-left">Estado</th>
+              <th class="py-3 px-4 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let orden of filteredOrdenes" class="border-b border-amber-100 hover:bg-amber-50 transition-colors">
+              <td class="py-4 px-4 font-medium text-amber-900">#{{ orden.id }}</td>
+              <td class="py-4 px-4 text-amber-800">{{ orden.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="py-4 px-4 text-amber-800">{{ orden.usuario?.nombre || 'Usuario #' + orden.id_usuario }}</td>
+              <td class="py-4 px-4 font-bold text-amber-900">S/{{ orden.total.toFixed(2) }}</td>
+              <td class="py-4 px-4">
+                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Completada</span>
+              </td>
+              <td class="py-4 px-4">
+                <button 
+                  (click)="viewOrderDetails(orden.id)" 
+                  class="text-amber-700 hover:text-amber-900 transition-colors flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Ver detalles
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

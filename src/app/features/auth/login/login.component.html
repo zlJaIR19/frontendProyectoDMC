@@ -1,0 +1,112 @@
+<div class="min-h-screen flex items-center justify-center bg-amber-50">
+  <div class="max-w-md w-full p-8 bg-white rounded-lg shadow-xl border border-amber-200">
+    <!-- Logo and header -->
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-amber-900">Cafetea Perú</h1>
+      <p class="text-amber-700 mt-1">Inicia sesión para continuar</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <span class="block sm:inline">{{ errorMessage }}</span>
+      </div>
+      
+      <!-- Username field -->
+      <div>
+        <label for="username" class="block text-sm font-medium text-amber-800">Usuario</label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username" 
+            class="pl-10 block w-full px-3 py-3 border border-amber-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+            [ngClass]="{'border-red-500': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+            placeholder="Ingresa tu nombre de usuario"
+          >
+        </div>
+        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="text-red-500 text-sm mt-1">
+          El nombre de usuario es requerido
+        </div>
+      </div>
+      
+      <!-- Password field -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-amber-800">Contraseña</label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            class="pl-10 block w-full px-3 py-3 border border-amber-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+            [ngClass]="{'border-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+            placeholder="Ingresa tu contraseña"
+          >
+        </div>
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-red-500 text-sm mt-1">
+          La contraseña es requerida
+        </div>
+      </div>
+      
+      <!-- Role selection -->
+      <div>
+        <label class="block text-sm font-medium text-amber-800 mb-2">Tipo de usuario</label>
+        <div class="flex space-x-4 bg-amber-50 p-3 rounded-md">
+          <div class="flex items-center">
+            <input 
+              type="radio" 
+              id="client" 
+              value="cliente" 
+              formControlName="role" 
+              class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300"
+            >
+            <label for="client" class="ml-2 block text-sm text-amber-800">Cliente</label>
+          </div>
+          <div class="flex items-center">
+            <input 
+              type="radio" 
+              id="admin" 
+              value="admin" 
+              formControlName="role" 
+              class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300"
+            >
+            <label for="admin" class="ml-2 block text-sm text-amber-800">Administrador</label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Submit button -->
+      <div>
+        <button 
+          type="submit" 
+          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-700 hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-all duration-200 transform hover:-translate-y-1"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="isLoading" class="mr-2">
+            <!-- Loading spinner -->
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </span>
+          {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

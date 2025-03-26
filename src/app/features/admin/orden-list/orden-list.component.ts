@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Orden } from '../../../shared/models/orden.model';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-orden-list',
@@ -18,14 +19,17 @@ export class OrdenListComponent implements OnInit {
   sortField = 'fecha';
   sortDirection: 'asc' | 'desc' = 'desc';
   searchTerm = '';
+  currentUserName: string = '';
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadOrdenes();
+    this.getCurrentUserName();
   }
 
   loadOrdenes(): void {
@@ -97,5 +101,16 @@ export class OrdenListComponent implements OnInit {
     }
     
     this.sortOrdenes();
+  }
+
+  getCurrentUserName(): void {
+    const currentUser = this.authService.getCurrentUser();
+    console.log('Current user data:', currentUser);
+    if (currentUser && currentUser.nombre) {
+      this.currentUserName = currentUser.nombre;
+      console.log('User full name (nombre):', this.currentUserName);
+    } else {
+      console.log('User name not available or not properly loaded');
+    }
   }
 }

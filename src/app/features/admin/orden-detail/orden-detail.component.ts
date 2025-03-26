@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OrdenesService } from '../ordenes.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-orden-detail',
@@ -15,11 +16,13 @@ export class OrdenDetailComponent implements OnInit {
   detalles: any[] = [];
   isLoading: boolean = true;
   errorMessage: string | null = null;
+  currentUserName: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private ordenesService: OrdenesService
+    private ordenesService: OrdenesService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -29,10 +32,11 @@ export class OrdenDetailComponent implements OnInit {
         this.ordenId = parseInt(id, 10);
         this.loadOrdenDetails();
       } else {
-        this.errorMessage = 'ID de orden no encontrado';
+        this.errorMessage = 'ID de orden no válido';
         this.isLoading = false;
       }
     });
+    this.getCurrentUserName();
   }
 
   loadOrdenDetails(): void {
@@ -63,5 +67,16 @@ export class OrdenDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/admin/ordenes']);
+  }
+
+  getCurrentUserName(): void {
+    const currentUser = this.authService.getCurrentUser();
+    console.log('Current user data:', currentUser);
+    if (currentUser && currentUser.nombre) {
+      this.currentUserName = currentUser.nombre;
+      console.log('User full name (nombre):', this.currentUserName);
+    } else {
+      console.log('User name not available or not properly loaded');
+    }
   }
 }

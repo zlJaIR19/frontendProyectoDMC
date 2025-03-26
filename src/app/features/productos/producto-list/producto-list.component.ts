@@ -18,6 +18,7 @@ export class ProductoListComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   successMessage = '';
+  currentUserName: string = '';
 
   constructor(
     private http: HttpClient,
@@ -26,6 +27,7 @@ export class ProductoListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProductos();
+    this.getCurrentUserName();
   }
 
   loadProductos(): void {
@@ -35,6 +37,8 @@ export class ProductoListComponent implements OnInit {
         this.productos = productos;
         this.filteredProductos = productos;
         this.isLoading = false;
+        console.log('Loaded products:', productos);
+        console.log('First product image path:', productos[0]?.imagen_url);
       },
       error: (error) => {
         this.errorMessage = 'Error loading products. Please try again later.';
@@ -64,24 +68,30 @@ export class ProductoListComponent implements OnInit {
       return;
     }
 
+    // Convert price to number if it's a string
+    const precioNumerico = typeof producto.precio === 'string' ? parseFloat(producto.precio) : producto.precio;
+
     // Create a new order directly
     const orden = {
       fecha: new Date(),
-      total: producto.precio,
-      id_usuario: user.id,
+      total: precioNumerico,
+      usuarioId: user.id, 
       detalles: [
         {
           cantidad: 1,
-          precio_unitario: producto.precio,
-          subtotal: producto.precio,
-          id_producto: producto.id
+          precio_unitario: precioNumerico,
+          subtotal: precioNumerico,
+          productoId: producto.id 
         }
       ]
     };
 
+    console.log('Sending order:', orden);
+
     // Send the order to the backend
     this.http.post('http://localhost:3001/ordenes', orden).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Order placed successfully:', response);
         this.successMessage = `Successfully ordered ${producto.nombre}`;
         setTimeout(() => this.successMessage = '', 3000);
       },
@@ -90,5 +100,16 @@ export class ProductoListComponent implements OnInit {
         console.error('Error placing order', error);
       }
     });
+  }
+
+  getCurrentUserName(): void {
+    const currentUser = this.authService.getCurrentUser();
+    console.log('Current user data:', currentUser);
+    if (currentUser && currentUser.nombre) {
+      this.currentUserName = currentUser.nombre;
+      console.log('User full name (nombre):', this.currentUserName);
+    } else {
+      console.log('User name not available or not properly loaded');
+    }
   }
 }

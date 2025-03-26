@@ -4,9 +4,10 @@ export interface Producto {
   id: number;
   nombre: string;
   descripcion: string;
-  precio: number;
+  precio: string | number;
   stock: number;
-  imagen: string;
-  id_categoria: number;
+  imagen_url: string;
+  fecha_creacion: string;
+  categoriaId: number;
   categoria?: Categoria;
 }

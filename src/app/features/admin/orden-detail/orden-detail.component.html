@@ -1,9 +1,12 @@
-<div class="bg-amber-50 min-h-screen pb-12">
+<div class="bg-amber-50 min-h-screen pb-12 pt-16">
   <!-- Admin header section -->
-  <div class="bg-coffee-pattern bg-amber-900 text-white py-8 mb-8">
+  <div class="bg-coffee-pattern bg-amber-900 text-white py-8 mb-8 shadow-md">
     <div class="container mx-auto px-4">
       <h1 class="text-3xl font-serif font-bold mb-2 text-amber-100">Panel de Administración</h1>
       <p class="text-amber-200">Gestión de órdenes de Cafetea Perú</p>
+      <div *ngIf="currentUserName" class="mt-4 text-amber-100 text-lg font-medium bg-amber-800/40 inline-block px-4 py-2 rounded-lg">
+        ¡Bienvenido(a) <span class="font-bold">{{ currentUserName }}</span>!
+      </div>
     </div>
   </div>
 

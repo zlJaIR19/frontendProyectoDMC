@@ -172,14 +172,11 @@
                   <td class="py-4 px-4">
                     <div class="flex items-center">
                       <div class="w-16 h-16 mr-4 flex-shrink-0 rounded-md overflow-hidden bg-amber-50">
-                        <img *ngIf="detalle.producto?.imagen_url" 
-                             [src]="detalle.producto?.imagen_url.startsWith('http') ? detalle.producto?.imagen_url : 'https://backendproyectodmc.onrender.com' + detalle.producto?.imagen_url" 
-                             alt="Imagen del producto" 
-                             class="w-full h-full object-cover">
-                        <img *ngIf="!detalle.producto?.imagen_url" 
-                             src="assets/products/coffee1.jpg" 
-                             alt="Imagen predeterminada" 
-                             class="w-full h-full object-cover">
+                        <img 
+                            [src]="detalle.producto?.imagen_url ? '/assets/' + detalle.producto.imagen_url : '/assets/products/coffee1.jpg'" 
+                            [alt]="detalle.producto?.nombre || 'Producto'"
+                            class="w-full h-full object-cover"
+                            onerror="this.src='/assets/products/coffee1.jpg';">
                       </div>
                       <div>
                         <div class="font-medium text-amber-900">

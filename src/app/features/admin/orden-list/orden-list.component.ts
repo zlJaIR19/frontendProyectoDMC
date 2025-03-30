@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Orden } from '../../../shared/models/orden.model';
 import { AuthService } from '../../../core/auth/auth.service';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-orden-list',
@@ -35,7 +36,7 @@ export class OrdenListComponent implements OnInit {
 
   loadOrdenes(): void {
     this.isLoading = true;
-    this.http.get<Orden[]>('http://localhost:3001/ordenes').subscribe({
+    this.http.get<Orden[]>(`${environment.apiUrl}/ordenes`).subscribe({
       next: (ordenes) => {
         this.ordenes = ordenes;
         this.filteredOrdenes = [...ordenes];

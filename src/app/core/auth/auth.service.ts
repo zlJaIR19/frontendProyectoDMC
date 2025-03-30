@@ -4,12 +4,13 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap, timeout } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Usuario } from '../../shared/models/usuario.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3001/usuarios';
+  private apiUrl = `${environment.apiUrl}/usuarios`;
   private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   private tokenKey = 'auth_token';
@@ -68,7 +69,7 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Login error:', error);
-        return throwError(() => new Error('Error de conexión con el servidor. Asegúrate que el backend esté funcionando en http://localhost:3001'));
+        return throwError(() => new Error(`Error de conexión con el servidor. Asegúrate que el backend esté funcionando en ${environment.apiUrl}`));
       })
     );
   }

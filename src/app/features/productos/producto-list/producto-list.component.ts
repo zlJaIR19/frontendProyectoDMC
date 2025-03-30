@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Producto } from '../../../shared/models/producto.model';
 import { AuthService } from '../../../core/auth/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-producto-list',
@@ -32,7 +33,7 @@ export class ProductoListComponent implements OnInit {
 
   loadProductos(): void {
     this.isLoading = true;
-    this.http.get<Producto[]>('http://localhost:3001/productos').subscribe({
+    this.http.get<Producto[]>(`${environment.apiUrl}/productos`).subscribe({
       next: (productos) => {
         this.productos = productos;
         this.filteredProductos = productos;
@@ -86,7 +87,7 @@ export class ProductoListComponent implements OnInit {
 
     console.log('Sending order:', orden);
 
-    this.http.post('http://localhost:3001/ordenes', orden).subscribe({
+    this.http.post(`${environment.apiUrl}/ordenes`, orden).subscribe({
       next: (response) => {
         console.log('Order placed successfully:', response);
         this.successMessage = `Detalle del producto: "${producto.nombre}" : Cantidad: 1`;

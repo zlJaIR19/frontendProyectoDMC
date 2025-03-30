@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../../shared/models/producto.model';
 import { Categoria } from '../../../shared/models/categoria.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-producto-management',
@@ -54,7 +55,7 @@ export class ProductoManagementComponent implements OnInit {
 
   loadProductos(): void {
     this.isLoading = true;
-    this.http.get<Producto[]>('http://localhost:3001/productos').subscribe({
+    this.http.get<Producto[]>(`${environment.apiUrl}/productos`).subscribe({
       next: (productos) => {
         this.productos = productos;
         this.isLoading = false;
@@ -68,7 +69,7 @@ export class ProductoManagementComponent implements OnInit {
   }
 
   loadCategorias(): void {
-    this.http.get<Categoria[]>('http://localhost:3001/categorias').subscribe({
+    this.http.get<Categoria[]>(`${environment.apiUrl}/categorias`).subscribe({
       next: (categorias) => {
         this.categorias = categorias;
       },
@@ -96,7 +97,7 @@ export class ProductoManagementComponent implements OnInit {
     const productoData = this.productoForm.value;
     
     if (this.isEditing && this.currentProductId) {
-      this.http.patch(`http://localhost:3001/productos/${this.currentProductId}`, productoData).subscribe({
+      this.http.patch(`${environment.apiUrl}/productos/${this.currentProductId}`, productoData).subscribe({
         next: () => {
           this.successMessage = '¡Producto actualizado con éxito!';
           this.resetForm();
@@ -109,7 +110,7 @@ export class ProductoManagementComponent implements OnInit {
         }
       });
     } else {
-      this.http.post('http://localhost:3001/productos', productoData).subscribe({
+      this.http.post(`${environment.apiUrl}/productos`, productoData).subscribe({
         next: () => {
           this.successMessage = '¡Producto creado con éxito!';
           this.resetForm();
@@ -143,7 +144,7 @@ export class ProductoManagementComponent implements OnInit {
 
   deleteProducto(id: number): void {
     if (confirm('¿Está seguro de que desea eliminar este producto?')) {
-      this.http.delete(`http://localhost:3001/productos/${id}`).subscribe({
+      this.http.delete(`${environment.apiUrl}/productos/${id}`).subscribe({
         next: () => {
           this.successMessage = '¡Producto eliminado con éxito!';
           this.loadProductos();

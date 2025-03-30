@@ -1,5 +1,4 @@
 <div class="bg-amber-50 min-h-screen pb-12 pt-16">
-  <!-- Admin header section -->
   <div class="bg-coffee-pattern bg-amber-900 text-white py-8 mb-8 shadow-md">
     <div class="container mx-auto px-4">
       <h1 class="text-3xl font-serif font-bold mb-2 text-amber-100">Panel de Administración</h1>
@@ -15,7 +14,6 @@
       <div class="flex flex-col md:flex-row justify-between items-center mb-6">
         <h2 class="text-2xl font-serif font-bold text-amber-900 mb-4 md:mb-0">Órdenes de Clientes</h2>
         
-        <!-- Search input -->
         <div class="relative w-full md:w-64">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,12 +29,10 @@
         </div>
       </div>
       
-      <!-- Error message -->
       <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
         <span class="block sm:inline">{{ errorMessage }}</span>
       </div>
       
-      <!-- Loading state -->
       <div *ngIf="isLoading" class="flex justify-center items-center py-16">
         <svg class="animate-spin h-10 w-10 text-amber-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -44,7 +40,6 @@
         </svg>
       </div>
       
-      <!-- No orders -->
       <div *ngIf="!isLoading && filteredOrdenes.length === 0" class="text-center py-16 bg-amber-50 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-amber-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -53,7 +48,6 @@
         <p class="text-amber-600 mt-2">Las órdenes de los clientes aparecerán aquí</p>
       </div>
       
-      <!-- Orders table -->
       <div *ngIf="!isLoading && filteredOrdenes.length > 0" class="overflow-x-auto">
         <table class="min-w-full bg-white rounded-lg overflow-hidden">
           <thead class="bg-amber-100 text-amber-900">

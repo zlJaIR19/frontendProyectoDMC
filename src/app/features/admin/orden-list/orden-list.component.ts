@@ -55,19 +55,16 @@ export class OrdenListComponent implements OnInit {
       const aValue = a[this.sortField as keyof Orden];
       const bValue = b[this.sortField as keyof Orden];
       
-      // Handle date comparison
       if (this.sortField === 'fecha_pedido') {
         const aTime = new Date(aValue as string).getTime();
         const bTime = new Date(bValue as string).getTime();
         return this.sortDirection === 'asc' ? aTime - bTime : bTime - aTime;
       }
       
-      // Handle number comparison
       if (typeof aValue === 'number' && typeof bValue === 'number') {
         return this.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
       }
       
-      // Handle string comparison
       const aString = String(aValue);
       const bString = String(bValue);
       return this.sortDirection === 'asc' 

@@ -22,7 +22,6 @@ export class ProductoManagementComponent implements OnInit {
   errorMessage = '';
   imagePreview: string | null = null;
   
-  // Lista de imágenes predeterminadas para la demo
   imagenesPredeterminadas = [
     { valor: 'products/coffee1.jpg', nombre: 'Café en Grano 1' },
     { valor: 'products/coffee2.jpg', nombre: 'Café en Grano 2' },
@@ -97,7 +96,6 @@ export class ProductoManagementComponent implements OnInit {
     const productoData = this.productoForm.value;
     
     if (this.isEditing && this.currentProductId) {
-      // Update existing product
       this.http.patch(`http://localhost:3001/productos/${this.currentProductId}`, productoData).subscribe({
         next: () => {
           this.successMessage = '¡Producto actualizado con éxito!';
@@ -111,7 +109,6 @@ export class ProductoManagementComponent implements OnInit {
         }
       });
     } else {
-      // Create new product
       this.http.post('http://localhost:3001/productos', productoData).subscribe({
         next: () => {
           this.successMessage = '¡Producto creado con éxito!';
@@ -168,7 +165,6 @@ export class ProductoManagementComponent implements OnInit {
     this.errorMessage = '';
   }
 
-  // Método para manejar la selección de imagen predeterminada
   onImageSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     if (selectElement && selectElement.value) {

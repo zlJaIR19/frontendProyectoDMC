@@ -68,10 +68,8 @@ export class ProductoListComponent implements OnInit {
       return;
     }
 
-    // Convert price to number if it's a string
     const precioNumerico = typeof producto.precio === 'string' ? parseFloat(producto.precio) : producto.precio;
 
-    // Create a new order directly
     const orden = {
       fecha_pedido: new Date(),
       total: precioNumerico,
@@ -82,14 +80,12 @@ export class ProductoListComponent implements OnInit {
           cantidad: 1,
           precio_unitario: precioNumerico,
           productoId: producto.id 
-          // Eliminamos el campo subtotal ya que es calculado automáticamente en la base de datos
         }
       ]
     };
 
     console.log('Sending order:', orden);
 
-    // Send the order to the backend
     this.http.post('http://localhost:3001/ordenes', orden).subscribe({
       next: (response) => {
         console.log('Order placed successfully:', response);

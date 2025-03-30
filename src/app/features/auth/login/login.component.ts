@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         console.log('Login successful:', user);
         
-        // Check if user is admin using the updated isAdmin method
         if (this.authService.isAdmin()) {
           this.router.navigate(['/admin']);
         } else {

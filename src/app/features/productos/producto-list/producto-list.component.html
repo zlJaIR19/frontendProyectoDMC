@@ -1,5 +1,4 @@
 <div class="bg-amber-50 min-h-screen pb-12 pt-16">
-  <!-- Hero section -->
   <div class="bg-coffee-pattern bg-amber-900 text-white py-12 mb-8 shadow-md">
     <div class="container mx-auto px-4">
       <h1 class="text-4xl font-serif font-bold mb-4 text-amber-100">Cafetea Perú</h1>
@@ -11,7 +10,6 @@
   </div>
 
   <div class="container mx-auto px-4">
-    <!-- Search bar -->
     <div class="mb-8 max-w-xl mx-auto">
       <div class="relative">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -38,7 +36,6 @@
       </div>
     </div>
     
-    <!-- Success message -->
     <div *ngIf="successMessage" class="bg-amber-50 border-l-4 border-amber-600 shadow-lg rounded-lg relative mb-8 max-w-2xl mx-auto overflow-hidden" role="alert">
       <div class="flex">
         <div class="py-4 px-5">
@@ -56,12 +53,10 @@
       <div class="absolute top-0 right-0 h-full w-1/4 bg-gradient-to-l from-amber-100 to-transparent opacity-50"></div>
     </div>
     
-    <!-- Error message -->
     <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-8 max-w-2xl mx-auto" role="alert">
       <span class="block sm:inline">{{ errorMessage }}</span>
     </div>
     
-    <!-- Loading state -->
     <div *ngIf="isLoading" class="flex justify-center items-center py-16">
       <svg class="animate-spin h-10 w-10 text-amber-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -69,7 +64,6 @@
       </svg>
     </div>
     
-    <!-- No results -->
     <div *ngIf="!isLoading && filteredProductos.length === 0" class="text-center py-16 bg-white rounded-lg shadow-md max-w-2xl mx-auto">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-amber-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -78,7 +72,6 @@
       <p class="text-amber-600 mt-2">Intenta con otra búsqueda</p>
     </div>
     
-    <!-- Product grid -->
     <div *ngIf="!isLoading && filteredProductos.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       <div *ngFor="let producto of filteredProductos" class="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-amber-100">
         <div class="relative h-56 overflow-hidden">

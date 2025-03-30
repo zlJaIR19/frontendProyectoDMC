@@ -29,63 +29,42 @@ export class AuthService {
     }
   }
 
-  login(username: string, password: string, role: string): Observable<Usuario> {
+  login(username: string, password: string, role: string): Observable<boolean> {
     console.log(`Attempting to login with username: ${username}, role: ${role}`);
     console.log('API URL being used:', this.apiUrl);
     
-    // Connect to the backend API to get real users
-    return this.http.get<Usuario[]>(this.apiUrl, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      })
-    }).pipe(
+    return this.http.get<Usuario[]>(this.apiUrl).pipe(
       map(users => {
-        console.log('API response received, total users:', users?.length);
-        
-        // Find the user with matching username
-        const user = users?.find(u => u.usuario === username);
+        const user = users.find(u => u.usuario.toLowerCase() === username.toLowerCase());
         
         if (!user) {
-          console.error('No user found with this username');
           throw new Error('Usuario no encontrado');
         }
         
-        console.log('User found:', user);
-        
-        // Check if password matches
         if (user.contraseña !== password) {
-          console.error('Password mismatch');
           throw new Error('Contraseña incorrecta');
         }
         
-        // Check role match - using exact match with case insensitivity
         const userRole = user.rol.toLowerCase();
         const requestedRole = role.toLowerCase();
         
         console.log(`Checking roles: User role=${userRole}, Requested role=${requestedRole}`);
         
-        // For admin login
         if (requestedRole === 'admin' || requestedRole === 'administrador') {
           if (userRole !== 'admin' && userRole !== 'administrador') {
-            console.error('User is not an admin');
             throw new Error('No tienes permisos de administrador');
           }
         } 
-        // For client login
         else if (requestedRole === 'cliente' || requestedRole === 'client') {
           if (userRole !== 'cliente') {
-            console.error('User is not a client');
             throw new Error('No tienes permisos de cliente');
           }
         }
         
-        // If we got here, authentication is successful
-        console.log('Authentication successful');
         localStorage.setItem(this.tokenKey, 'demo-token');
         localStorage.setItem(this.userKey, JSON.stringify(user));
         this.currentUserSubject.next(user);
-        return user;
+        return true;
       }),
       catchError(error => {
         console.error('Login error:', error);
@@ -122,5 +101,11 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  hasRole(role: string): boolean {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) return false;
+    return currentUser.rol.toLowerCase() === role.toLowerCase();
   }
 }

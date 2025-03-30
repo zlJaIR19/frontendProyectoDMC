@@ -73,15 +73,16 @@ export class ProductoListComponent implements OnInit {
 
     // Create a new order directly
     const orden = {
-      fecha: new Date(),
+      fecha_pedido: new Date(),
       total: precioNumerico,
       usuarioId: user.id, 
-      detalles: [
+      estado: 'Pendiente',
+      detallesOrden: [
         {
           cantidad: 1,
           precio_unitario: precioNumerico,
-          subtotal: precioNumerico,
           productoId: producto.id 
+          // Eliminamos el campo subtotal ya que es calculado automáticamente en la base de datos
         }
       ]
     };
@@ -92,11 +93,11 @@ export class ProductoListComponent implements OnInit {
     this.http.post('http://localhost:3001/ordenes', orden).subscribe({
       next: (response) => {
         console.log('Order placed successfully:', response);
-        this.successMessage = `Successfully ordered ${producto.nombre}`;
-        setTimeout(() => this.successMessage = '', 3000);
+        this.successMessage = `Detalle del producto: "${producto.nombre}" : Cantidad: 1`;
+        setTimeout(() => this.successMessage = '', 5000);
       },
       error: (error) => {
-        this.errorMessage = 'Error placing order. Please try again later.';
+        this.errorMessage = 'Error al realizar el pedido. Por favor, inténtelo de nuevo más tarde.';
         console.error('Error placing order', error);
       }
     });

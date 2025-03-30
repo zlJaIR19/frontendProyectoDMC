@@ -13,5 +13,9 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'ordenes/:id',
     loadComponent: () => import('./orden-detail/orden-detail.component').then(m => m.OrdenDetailComponent)
+  },
+  {
+    path: 'productos',
+    loadComponent: () => import('./producto-management/producto-management.component').then(m => m.ProductoManagementComponent)
   }
 ];

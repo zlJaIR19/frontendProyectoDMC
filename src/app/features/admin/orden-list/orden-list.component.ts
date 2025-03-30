@@ -4,19 +4,20 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Orden } from '../../../shared/models/orden.model';
 import { AuthService } from '../../../core/auth/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-orden-list',
+  templateUrl: './orden-list.component.html',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './orden-list.component.html'
+  imports: [CommonModule, FormsModule]
 })
 export class OrdenListComponent implements OnInit {
   ordenes: Orden[] = [];
   filteredOrdenes: Orden[] = [];
   isLoading = true;
   errorMessage = '';
-  sortField = 'fecha';
+  sortField = 'fecha_pedido';
   sortDirection: 'asc' | 'desc' = 'desc';
   searchTerm = '';
   currentUserName: string = '';
@@ -37,7 +38,7 @@ export class OrdenListComponent implements OnInit {
     this.http.get<Orden[]>('http://localhost:3001/ordenes').subscribe({
       next: (ordenes) => {
         this.ordenes = ordenes;
-        this.filteredOrdenes = ordenes;
+        this.filteredOrdenes = [...ordenes];
         this.sortOrdenes();
         this.isLoading = false;
       },
@@ -51,25 +52,32 @@ export class OrdenListComponent implements OnInit {
 
   sortOrdenes(): void {
     this.filteredOrdenes.sort((a, b) => {
-      let aValue: any = a[this.sortField as keyof Orden];
-      let bValue: any = b[this.sortField as keyof Orden];
+      const aValue = a[this.sortField as keyof Orden];
+      const bValue = b[this.sortField as keyof Orden];
       
       // Handle date comparison
-      if (this.sortField === 'fecha') {
-        aValue = new Date(aValue).getTime();
-        bValue = new Date(bValue).getTime();
+      if (this.sortField === 'fecha_pedido') {
+        const aTime = new Date(aValue as string).getTime();
+        const bTime = new Date(bValue as string).getTime();
+        return this.sortDirection === 'asc' ? aTime - bTime : bTime - aTime;
       }
       
-      if (this.sortDirection === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
+      // Handle number comparison
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return this.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
       }
+      
+      // Handle string comparison
+      const aString = String(aValue);
+      const bString = String(bValue);
+      return this.sortDirection === 'asc' 
+        ? aString.localeCompare(bString)
+        : bString.localeCompare(aString);
     });
   }
 
   changeSortField(field: string): void {
-    if (this.sortField === field) {
+    if (field === this.sortField) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.sortField = field;
@@ -79,7 +87,7 @@ export class OrdenListComponent implements OnInit {
   }
 
   getSortIcon(field: string): string {
-    if (this.sortField !== field) return 'fa-sort';
+    if (field !== this.sortField) return 'fa-sort';
     return this.sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
   }
 
@@ -88,29 +96,18 @@ export class OrdenListComponent implements OnInit {
   }
 
   searchOrders(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm = input.value.toLowerCase();
-    
-    if (!this.searchTerm) {
-      this.filteredOrdenes = [...this.ordenes];
-    } else {
-      this.filteredOrdenes = this.ordenes.filter(orden => 
-        orden.id.toString().includes(this.searchTerm) || 
-        (orden.usuario?.nombre && orden.usuario.nombre.toLowerCase().includes(this.searchTerm))
-      );
-    }
-    
-    this.sortOrdenes();
+    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredOrdenes = this.ordenes.filter(orden => 
+      orden.id.toString().includes(searchTerm) ||
+      (orden.usuario?.nombre || '').toLowerCase().includes(searchTerm) ||
+      orden.estado.toLowerCase().includes(searchTerm)
+    );
   }
 
   getCurrentUserName(): void {
     const currentUser = this.authService.getCurrentUser();
-    console.log('Current user data:', currentUser);
     if (currentUser && currentUser.nombre) {
       this.currentUserName = currentUser.nombre;
-      console.log('User full name (nombre):', this.currentUserName);
-    } else {
-      console.log('User name not available or not properly loaded');
     }
   }
 }

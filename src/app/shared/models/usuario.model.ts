@@ -1,3 +1,5 @@
+import { Orden } from './orden.model';
+
 export interface Usuario {
   id: number;
   usuario: string;
@@ -7,4 +9,5 @@ export interface Usuario {
   rol: string;
   fecha_nacimiento: Date;
   fecha_creacion: Date;
+  ordenes?: Orden[];
 }

@@ -72,9 +72,9 @@
                 </button>
               </th>
               <th class="py-3 px-4 text-left">
-                <button (click)="changeSortField('fecha')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
+                <button (click)="changeSortField('fecha_pedido')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
                   Fecha
-                  <span *ngIf="sortField === 'fecha'" class="ml-1">
+                  <span *ngIf="sortField === 'fecha_pedido'" class="ml-1">
                     <svg *ngIf="sortDirection === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                     </svg>
@@ -85,9 +85,9 @@
                 </button>
               </th>
               <th class="py-3 px-4 text-left">
-                <button (click)="changeSortField('id_usuario')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
+                <button (click)="changeSortField('usuarioId')" class="flex items-center font-semibold hover:text-amber-700 transition-colors">
                   Cliente
-                  <span *ngIf="sortField === 'id_usuario'" class="ml-1">
+                  <span *ngIf="sortField === 'usuarioId'" class="ml-1">
                     <svg *ngIf="sortDirection === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                     </svg>
@@ -116,23 +116,29 @@
           </thead>
           <tbody>
             <tr *ngFor="let orden of filteredOrdenes" class="border-b border-amber-100 hover:bg-amber-50 transition-colors">
-              <td class="py-4 px-4 font-medium text-amber-900">#{{ orden.id }}</td>
-              <td class="py-4 px-4 text-amber-800">{{ orden.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td class="py-4 px-4 text-amber-800">{{ orden.usuario?.nombre || 'Usuario #' + orden.id_usuario }}</td>
-              <td class="py-4 px-4 font-bold text-amber-900">S/{{ orden.total.toFixed(2) }}</td>
+              <td class="py-4 px-4 text-amber-800">#{{ orden.id }}</td>
+              <td class="py-4 px-4 text-amber-800">{{ orden.fecha_pedido | date:'dd/MM/yyyy HH:mm' }}</td>
               <td class="py-4 px-4">
-                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Completada</span>
+                <div class="font-medium text-amber-900">{{ orden.usuario?.nombre || 'Usuario desconocido' }}</div>
               </td>
+              <td class="py-4 px-4 text-right font-medium text-amber-900">S/{{ orden.total }}</td>
               <td class="py-4 px-4">
-                <button 
-                  (click)="viewOrderDetails(orden.id)" 
-                  class="text-amber-700 hover:text-amber-900 transition-colors flex items-center"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Ver detalles
+                <span class="px-2 py-1 rounded-full text-xs font-medium" 
+                      [ngClass]="{
+                        'bg-green-100 text-green-800': orden.estado === 'Completado',
+                        'bg-blue-100 text-blue-800': orden.estado === 'Enviado',
+                        'bg-amber-100 text-amber-800': orden.estado === 'Pendiente'
+                      }">
+                  {{ orden.estado }}
+                </span>
+              </td>
+              <td class="py-4 px-4 text-right">
+                <button (click)="viewOrderDetails(orden.id)" class="text-amber-600 hover:text-amber-900">
+                  <i class="fas fa-eye mr-1"></i> Ver detalles
+                  <span *ngIf="!orden.detallesOrden || orden.detallesOrden.length === 0" 
+                        class="ml-2 text-xs text-red-500">
+                    (Sin productos)
+                  </span>
                 </button>
               </td>
             </tr>

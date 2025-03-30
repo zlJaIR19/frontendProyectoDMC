@@ -3,9 +3,10 @@ import { DetalleOrden } from './detalle-orden.model';
 
 export interface Orden {
   id: number;
-  fecha: Date;
+  fecha_pedido: Date;
   total: number;
-  id_usuario: number;
+  usuarioId: number;
+  estado: string;
   usuario?: Usuario;
-  detalles?: DetalleOrden[];
+  detallesOrden?: DetalleOrden[];
 }

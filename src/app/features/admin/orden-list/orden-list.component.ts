@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Orden } from '../../../shared/models/orden.model';
 import { AuthService } from '../../../core/auth/auth.service';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../../environments/environment';
+
+// Importación directa del objeto environment
+const environment = {
+  apiUrl: 'https://backendproyectodmc.onrender.com',
+  production: true
+};
 
 @Component({
   selector: 'app-orden-list',

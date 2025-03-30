@@ -4,7 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Producto } from '../../../shared/models/producto.model';
 import { AuthService } from '../../../core/auth/auth.service';
-import { environment } from '../../../../environments/environment';
+
+// Importación directa del objeto environment
+const environment = {
+  apiUrl: 'https://backendproyectodmc.onrender.com',
+  production: true
+};
 
 @Component({
   selector: 'app-producto-list',

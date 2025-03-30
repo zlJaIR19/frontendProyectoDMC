@@ -4,7 +4,12 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap, timeout } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Usuario } from '../../shared/models/usuario.model';
-import { environment } from '../../../../environments/environment';
+
+// Importación directa del objeto environment
+const environment = {
+  apiUrl: 'https://backendproyectodmc.onrender.com',
+  production: true
+};
 
 @Injectable({
   providedIn: 'root'

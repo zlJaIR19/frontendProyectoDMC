@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Producto } from '../../shared/models/producto.model';
-import { environment } from '../../../../environments/environment';
+
+// Importación directa del objeto environment
+const environment = {
+  apiUrl: 'https://backendproyectodmc.onrender.com',
+  production: true
+};
 
 @Injectable({
   providedIn: 'root'

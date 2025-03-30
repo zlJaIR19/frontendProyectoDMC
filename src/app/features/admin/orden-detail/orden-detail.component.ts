@@ -4,7 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Orden } from '../../../shared/models/orden.model';
 import { AuthService } from '../../../core/auth/auth.service';
-import { environment } from '../../../../environments/environment';
+
+// Importación directa del objeto environment
+const environment = {
+  apiUrl: 'https://backendproyectodmc.onrender.com',
+  production: true
+};
 
 @Component({
   selector: 'app-orden-detail',
@@ -20,6 +25,7 @@ export class OrdenDetailComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   ordenId = 0;
+  currentUserName = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -39,6 +45,12 @@ export class OrdenDetailComponent implements OnInit {
         this.isLoading = false;
       }
     });
+    
+    // Obtener el nombre del usuario actual
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.currentUserName = currentUser.nombre || '';
+    }
   }
 
   loadOrden(): void {
@@ -89,5 +101,9 @@ export class OrdenDetailComponent implements OnInit {
 
   reloadOrdenDetails(): void {
     this.loadOrden();
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin/ordenes']);
   }
 }

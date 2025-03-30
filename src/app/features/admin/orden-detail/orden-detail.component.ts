@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Orden } from '../../../shared/models/orden.model';
 import { AuthService } from '../../../core/auth/auth.service';
 
-// Importación directa del objeto environment
+
 const environment = {
   apiUrl: 'https://backendproyectodmc.onrender.com',
   production: true
@@ -46,7 +46,7 @@ export class OrdenDetailComponent implements OnInit {
       }
     });
     
-    // Obtener el nombre del usuario actual
+    
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserName = currentUser.nombre || '';
@@ -57,28 +57,22 @@ export class OrdenDetailComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     
-    this.http.get(`${environment.apiUrl}/ordenes/${this.ordenId}?_expand=usuario`).subscribe({
+    this.http.get(`${environment.apiUrl}/ordenes/${this.ordenId}`).subscribe({
       next: (data: any) => {
         this.orden = data;
-        this.loadDetallesOrden();
+        // Usar los detalles que ya vienen incluidos en la respuesta
+        if (data.detallesOrden && Array.isArray(data.detallesOrden)) {
+          this.detallesOrden = data.detallesOrden;
+          this.isLoading = false;
+        } else {
+          console.log('No se encontraron detalles de orden en la respuesta:', data);
+          this.errorMessage = 'No se encontraron detalles para esta orden.';
+          this.isLoading = false;
+        }
       },
       error: (error) => {
         console.error('Error loading orden:', error);
         this.errorMessage = 'Error al cargar la orden. Por favor, intenta de nuevo.';
-        this.isLoading = false;
-      }
-    });
-  }
-
-  loadDetallesOrden(): void {
-    this.http.get(`${environment.apiUrl}/detallesOrden?ordenId=${this.ordenId}&_expand=producto`).subscribe({
-      next: (detalles: any) => {
-        this.detallesOrden = detalles;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading detalles orden:', error);
-        this.errorMessage = 'Error al cargar los detalles de la orden. Por favor, intenta de nuevo.';
         this.isLoading = false;
       }
     });

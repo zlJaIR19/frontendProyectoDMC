@@ -2,7 +2,7 @@
 
 ## Descripción del Proyecto
 
-Cafetea Perú es una aplicación web completa para la gestión y venta de productos de café peruano. La plataforma permite a los clientes explorar y comprar productos, mientras que los administradores pueden gestionar productos y órdenes a través de un panel de administración dedicado.
+Cafetea Perú es una aplicación web completa para la gestión y venta de productos de café en general. La plataforma permite a los clientes explorar y comprar productos, mientras que los administradores pueden gestionar productos y órdenes a través de un panel de administración dedicado.
 
 ## Arquitectura
 
@@ -20,12 +20,11 @@ El proyecto está construido con una arquitectura de tres capas:
 - Angular 19
 - Tailwind CSS 4
 - TypeScript
-- RxJS
+
 
 ### Backend
 - NestJS
 - TypeORM
-- JWT para autenticación
 - PostgreSQL como base de datos
 
 ### Despliegue

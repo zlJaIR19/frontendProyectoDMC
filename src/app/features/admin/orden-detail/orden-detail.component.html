@@ -1,77 +1,119 @@
-<div class="bg-amber-50 min-h-screen pb-12 pt-16">
-  <div class="bg-coffee-pattern bg-amber-900 text-white py-8 mb-8 shadow-md">
-    <div class="container mx-auto px-4">
+<div class="bg-gradient-to-b from-amber-50 to-amber-100 min-h-screen pb-12 pt-16">
+  <!-- Header con patrón de fondo -->
+  <div class="bg-coffee-pattern bg-amber-900 text-white py-8 mb-8 shadow-lg relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-amber-900/90 to-amber-800/90"></div>
+    <div class="container mx-auto px-4 relative z-10">
       <h1 class="text-3xl font-serif font-bold mb-2 text-amber-100">Panel de Administración</h1>
       <p class="text-amber-200">Gestión de órdenes de Cafetea Perú</p>
-      <div *ngIf="currentUserName" class="mt-4 text-amber-100 text-lg font-medium bg-amber-800/40 inline-block px-4 py-2 rounded-lg">
+      <div *ngIf="currentUserName" class="mt-4 text-amber-100 text-lg font-medium bg-amber-800/40 inline-block px-4 py-2 rounded-lg shadow-sm">
         ¡Bienvenido(a) <span class="font-bold">{{ currentUserName }}</span>!
       </div>
     </div>
   </div>
 
   <div class="container mx-auto px-4">
+    <!-- Botón de regreso con animación hover -->
     <button 
       (click)="goBack()" 
-      class="flex items-center text-amber-800 hover:text-amber-600 transition-colors mb-6"
+      class="flex items-center text-amber-800 hover:text-amber-600 transition-colors mb-6 group"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
-      Volver a la lista de órdenes
+      <span class="border-b border-transparent group-hover:border-amber-600">Volver a la lista de órdenes</span>
     </button>
 
-    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
-      <span class="block sm:inline">{{ errorMessage }}</span>
+    <!-- Mensajes de alerta con animación de entrada -->
+    <div *ngIf="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg mb-6 shadow-md animate-fadeIn" role="alert">
+      <div class="flex">
+        <div class="py-1 mr-3">
+          <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div>
+          <p class="font-medium">{{ errorMessage }}</p>
+        </div>
+      </div>
     </div>
     
-    <div *ngIf="isLoading" class="flex justify-center items-center py-16">
-      <svg class="animate-spin h-10 w-10 text-amber-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <!-- Indicador de carga con animación -->
+    <div *ngIf="isLoading" class="flex flex-col justify-center items-center py-16">
+      <svg class="animate-spin h-12 w-12 text-amber-700 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
+      <p class="text-amber-800 font-medium">Cargando detalles de la orden...</p>
     </div>
 
-    <div *ngIf="!isLoading && orden" class="space-y-6">
-      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <div class="bg-coffee-medium text-white p-6">
+    <!-- Contenido principal con tarjetas con sombras y efectos -->
+    <div *ngIf="!isLoading && orden" class="space-y-8">
+      <!-- Tarjeta de información general de la orden -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:shadow-xl">
+        <div class="bg-gradient-to-r from-amber-800 to-amber-700 text-white p-6">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
               <h2 class="text-2xl font-serif font-bold">Orden #{{ orden.id }}</h2>
               <p class="text-amber-100 mt-1">{{ orden.fecha_pedido | date:'dd/MM/yyyy HH:mm' }}</p>
             </div>
-            <span class="mt-4 md:mt-0 px-4 py-2 bg-green-500 text-white rounded-full text-sm font-medium">
+            <span [ngClass]="{
+              'bg-yellow-500': orden.estado === 'Pendiente',
+              'bg-blue-500': orden.estado === 'Enviado',
+              'bg-green-500': orden.estado === 'Completado'
+            }" class="mt-4 md:mt-0 px-4 py-2 text-white rounded-full text-sm font-medium shadow-sm">
               {{ orden.estado }}
             </span>
           </div>
         </div>
         
         <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Información del cliente con iconos -->
             <div>
-              <h3 class="text-lg font-medium text-amber-900 mb-3">Información del Cliente</h3>
-              <div class="bg-amber-50 rounded-lg p-4">
-                <p class="text-amber-800"><span class="font-medium">Nombre:</span> {{ orden.usuario?.nombre }}</p>
-                <p class="text-amber-800 mt-2"><span class="font-medium">Email:</span> {{ orden.usuario?.email }}</p>
-                <p class="text-amber-800 mt-2"><span class="font-medium">ID de Cliente:</span> {{ orden.usuarioId }}</p>
+              <h3 class="text-lg font-medium text-amber-900 mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Información del Cliente
+              </h3>
+              <div class="bg-amber-50 rounded-lg p-5 shadow-inner">
+                <div class="flex items-center mb-3">
+                  <span class="font-medium text-amber-800 w-24">Nombre:</span>
+                  <span class="text-amber-900">{{ orden.usuario?.nombre }}</span>
+                </div>
+                <div class="flex items-center mb-3">
+                  <span class="font-medium text-amber-800 w-24">Email:</span>
+                  <span class="text-amber-900">{{ orden.usuario?.email }}</span>
+                </div>
+                <div class="flex items-center">
+                  <span class="font-medium text-amber-800 w-24">ID Cliente:</span>
+                  <span class="text-amber-900">{{ orden.usuarioId }}</span>
+                </div>
               </div>
             </div>
             
+            <!-- Resumen de la orden con iconos y mejor formato -->
             <div>
-              <h3 class="text-lg font-medium text-amber-900 mb-3">Resumen de la Orden</h3>
-              <div class="bg-amber-50 rounded-lg p-4">
-                <div class="flex justify-between items-center">
+              <h3 class="text-lg font-medium text-amber-900 mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Resumen de la Orden
+              </h3>
+              <div class="bg-amber-50 rounded-lg p-5 shadow-inner">
+                <div class="flex justify-between items-center mb-3">
                   <span class="text-amber-800 font-medium">Cantidad de productos:</span>
-                  <span class="text-amber-900">{{ detallesOrden.length }}</span>
+                  <span class="text-amber-900 font-semibold bg-amber-100 px-3 py-1 rounded-full">{{ detallesOrden.length }}</span>
                 </div>
-                <div class="flex justify-between items-center mt-2">
+                <div class="flex justify-between items-center mb-3">
                   <span class="text-amber-800 font-medium">Subtotal:</span>
                   <span class="text-amber-900">S/{{ orden.total }}</span>
                 </div>
-                <div class="flex justify-between items-center mt-2">
+                <div class="flex justify-between items-center mb-3">
                   <span class="text-amber-800 font-medium">Envío:</span>
                   <span class="text-amber-900">S/0.00</span>
                 </div>
-                <div class="flex justify-between items-center mt-2 pt-2 border-t border-amber-200">
+                <div class="flex justify-between items-center pt-3 border-t border-amber-200">
                   <span class="text-amber-900 font-bold">Total:</span>
                   <span class="text-amber-900 font-bold text-xl">S/{{ orden.total }}</span>
                 </div>
@@ -81,10 +123,17 @@
         </div>
       </div>
       
-      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <!-- Tarjeta de productos ordenados -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:shadow-xl">
         <div class="p-6">
-          <h3 class="text-xl font-serif font-bold text-amber-900 mb-4">Productos Ordenados</h3>
+          <h3 class="text-xl font-serif font-bold text-amber-900 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Productos Ordenados
+          </h3>
           
+          <!-- Indicador de carga para productos -->
           <div *ngIf="isLoading" class="flex justify-center items-center py-8">
             <svg class="animate-spin h-8 w-8 text-amber-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -93,18 +142,29 @@
           </div>
           
           <div *ngIf="!isLoading" class="overflow-x-auto">
-            <div *ngIf="detallesOrden.length === 0" class="bg-yellow-100 p-4 mb-4 rounded-lg">
-              <p class="text-yellow-800">No se encontraron productos en esta orden.</p>
-              <p class="text-yellow-700 text-sm mt-2">ID de orden: {{ ordenId }}</p>
+            <!-- Mensaje cuando no hay productos -->
+            <div *ngIf="detallesOrden.length === 0" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-lg">
+              <div class="flex">
+                <div class="py-1 mr-3">
+                  <svg class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-yellow-800">No se encontraron productos en esta orden.</p>
+                  <p class="text-yellow-700 text-sm mt-1">ID de orden: {{ ordenId }}</p>
+                </div>
+              </div>
             </div>
             
+            <!-- Tabla de productos con hover y efectos -->
             <table *ngIf="detallesOrden.length > 0" class="min-w-full">
               <thead class="bg-amber-100 text-amber-900">
                 <tr>
-                  <th class="py-3 px-4 text-left">Producto</th>
-                  <th class="py-3 px-4 text-right">Precio Unitario</th>
-                  <th class="py-3 px-4 text-right">Cantidad</th>
-                  <th class="py-3 px-4 text-right">Subtotal</th>
+                  <th class="py-3 px-4 text-left font-semibold">Producto</th>
+                  <th class="py-3 px-4 text-right font-semibold">Precio Unitario</th>
+                  <th class="py-3 px-4 text-right font-semibold">Cantidad</th>
+                  <th class="py-3 px-4 text-right font-semibold">Subtotal</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,12 +201,25 @@
         </div>
       </div>
       
+      <!-- Botones de acción con mejores efectos y diseño -->
       <div class="flex justify-end space-x-4">
-        <button class="px-6 py-2 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 transition-colors">
+        <button class="px-6 py-3 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 transition-all hover:shadow-md flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
           Imprimir Orden
         </button>
-        <button class="px-6 py-2 bg-coffee-medium text-white rounded-lg hover:bg-coffee-dark transition-colors">
+        <button (click)="updateEstado('Enviado')" *ngIf="orden?.estado === 'Pendiente'" class="px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all hover:shadow-md flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
           Marcar como Enviada
+        </button>
+        <button (click)="updateEstado('Completado')" *ngIf="orden?.estado === 'Enviado'" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all hover:shadow-md flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Marcar como Completada
         </button>
       </div>
     </div>

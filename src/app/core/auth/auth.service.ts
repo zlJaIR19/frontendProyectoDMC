@@ -21,6 +21,30 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userKey = 'current_user';
 
+  // Usuarios de prueba para desarrollo
+  private mockUsers: Usuario[] = [
+    { 
+      id: 1, 
+      usuario: 'admin1', 
+      contraseña: 'admin123', 
+      rol: 'administrador', 
+      nombre: 'Administrador',
+      correo: 'admin@cafeteaperu.com',
+      fecha_nacimiento: new Date('1990-01-01'),
+      fecha_creacion: new Date()
+    },
+    { 
+      id: 2, 
+      usuario: 'cliente1', 
+      contraseña: 'cliente123', 
+      rol: 'cliente', 
+      nombre: 'Cliente',
+      correo: 'cliente@cafeteaperu.com',
+      fecha_nacimiento: new Date('1995-01-01'),
+      fecha_creacion: new Date()
+    }
+  ];
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -37,9 +61,9 @@ export class AuthService {
 
   login(username: string, password: string, role: string): Observable<boolean> {
     console.log(`Attempting to login with username: ${username}, role: ${role}`);
-    console.log('API URL being used:', this.apiUrl);
     
-    return this.http.get<Usuario[]>(this.apiUrl).pipe(
+    // Usar datos de prueba en lugar de llamar al backend
+    return of(this.mockUsers).pipe(
       map(users => {
         const user = users.find(u => u.usuario.toLowerCase() === username.toLowerCase());
         
@@ -51,30 +75,19 @@ export class AuthService {
           throw new Error('Contraseña incorrecta');
         }
         
-        const userRole = user.rol.toLowerCase();
-        const requestedRole = role.toLowerCase();
-        
-        console.log(`Checking roles: User role=${userRole}, Requested role=${requestedRole}`);
-        
-        if (requestedRole === 'admin' || requestedRole === 'administrador') {
-          if (userRole !== 'admin' && userRole !== 'administrador') {
-            throw new Error('No tienes permisos de administrador');
-          }
-        } 
-        else if (requestedRole === 'cliente' || requestedRole === 'client') {
-          if (userRole !== 'cliente') {
-            throw new Error('No tienes permisos de cliente');
-          }
+        if (user.rol !== role) {
+          throw new Error(`El usuario no tiene rol de ${role}`);
         }
         
-        localStorage.setItem(this.tokenKey, 'demo-token');
+        // Login successful
+        localStorage.setItem(this.tokenKey, 'mock-jwt-token');
         localStorage.setItem(this.userKey, JSON.stringify(user));
         this.currentUserSubject.next(user);
         return true;
       }),
       catchError(error => {
         console.error('Login error:', error);
-        return throwError(() => new Error(`Error de conexión con el servidor. Asegúrate que el backend esté funcionando en ${environment.apiUrl}`));
+        return throwError(() => error);
       })
     );
   }

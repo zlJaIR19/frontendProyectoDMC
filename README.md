@@ -12,7 +12,7 @@ El proyecto está construido con una arquitectura de tres capas:
 2. **Backend**: API RESTful desarrollada con NestJS
 3. **Base de Datos**: PostgreSQL alojada en Render
 
-![Arquitectura del Proyecto](./docs/arquitectura.png)
+![Arquitectura del Proyecto][https://github.com/zlJaIR19/frontendProyectoDMC/blob/main/documentacion/arquitectura.txt]
 
 ## Tecnologías Utilizadas
 
@@ -77,7 +77,7 @@ ProyectoFront/
 
 1. **Clonar el repositorio**
    ```bash
-   git clone <url-del-repositorio>
+   git clone <https://github.com/zlJaIR19/frontendProyectoDMC.git>
    cd ProyectoFront
    ```
 
@@ -109,23 +109,8 @@ El proyecto está desplegado en Render con la siguiente configuración:
 - **Base de Datos**: PostgreSQL
 
 ### URLs de Producción
-- Frontend:
-- Backend API: 
-
-## Documentación Detallada
-
-Para documentación más detallada, consulte:
-
-- [Documentación del Frontend](./Frontend/docs/index.html) 
-- [Documentación de la API](./backend/docs/api.html) 
-
-
-
-
-### Documentación de la API con Swagger
-La documentación de la API está disponible en:
-- Desarrollo local: http://localhost:3001/api
-- Producción: https://cafetea-peru-api.onrender.com/api
+- Frontend: https://frontendproyectodmc.onrender.com
+- Backend API: https://backendproyectodmc.onrender.com
 
 ## Licencia
 
@@ -136,3 +121,6 @@ Este proyecto está licenciado bajo [Licencia MIT](LICENSE)
 Para más información, contactar a:
 - Nombre: Jair Rivas
 - Email: d.jair.rivas.n@gmail.com
+
+
+[https://github.com/zlJaIR19/frontendProyectoDMC/blob/main/documentacion/arquitectura.txt]: https://github.com/zlJaIR19/frontendProyectoDMC/blob/main/documentacion/arquitectura.txt

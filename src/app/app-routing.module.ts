@@ -19,8 +19,9 @@ const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['administrador', 'admin'] }
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' }
+  { path: '', loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent), pathMatch: 'full' },
+  { path: 'login', redirectTo: '/', pathMatch: 'full' },
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({
